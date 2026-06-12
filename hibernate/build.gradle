@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.common'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Hibernate ORM
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+
+    // Jakarta Persistence API
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+    // HikariCP connection pool
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+
+    // Flyway DB migration
+    implementation 'org.flywaydb:flyway-core:10.10.0'
+    implementation 'org.flywaydb:flyway-sqlserver:10.10.0'
+
+    // Database drivers
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11'
+    implementation 'org.apache.derby:derby:10.17.1.0'
+    implementation 'org.apache.derby:derbytools:10.17.1.0'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'ch.qos.logback:logback-classic:1.5.3'
+
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'org.common.Main',
+            'Manifest-Version': '1.0'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task libraryJar(type: Jar) {
+    archiveClassifier = 'library'
+    from sourceSets.main.output
+}
