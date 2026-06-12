@@ -1,0 +1,88 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# application.yml — Fill in all CHANGE_ME values before starting the server.
+# DO NOT commit this file to git — keep it only on the server.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Server ───────────────────────────────────────────────────────────────────
+server:
+  port: 9092
+
+# ── Spring Framework Settings (do not change) ────────────────────────────────
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  mail:
+    host: smtppva.prod.com
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: false
+          ssl:
+            trust: "*"
+
+# ── Application ──────────────────────────────────────────────────────────────
+app:
+
+  # Database — set db-type to "oracle", "mysql", "psql", or "derby"
+  # Fill in only the block that matches your db-type, the others can be ignored
+  db-type: oracle
+
+  datasource:
+    oracle:
+      user: CHANGE_ME
+      password: CHANGE_ME
+      connect-string: host:1521/ORCLPDB1    # e.g. myserver.corp.com:1521/ORCLPDB1
+      pool-min: 2
+      pool-max: 10
+    mysql:
+      url: jdbc:mysql://host:3306/stubserver  # e.g. jdbc:mysql://myserver:3306/stubserver
+      user: CHANGE_ME
+      password: CHANGE_ME
+    psql:
+      url: jdbc:postgresql://host:5432/stubserver  # e.g. jdbc:postgresql://myserver:5432/stubserver
+      user: CHANGE_ME
+      password: CHANGE_ME
+    derby:
+      url: jdbc:derby://host:1527/stubserver  # e.g. jdbc:derby://myserver:1527/stubserver (Derby Network Server)
+      user: CHANGE_ME
+      password: CHANGE_ME
+
+  # URLs
+  cors-origin: https://your-prod-domain.com   # frontend URL allowed to call this API
+  prod-url: https://your-prod-domain.com       # used in password reset email links
+
+  # Core StubServer
+  core-server:
+    port: 9093
+    name: StubServer
+
+  # JWT Secrets — use long random strings
+  jwt:
+    access-secret: CHANGE_ME
+    refresh-secret: CHANGE_ME
+    reset-secret: CHANGE_ME
+    access-expires-seconds: 900        # 15 minutes
+    refresh-expires-seconds: 1296000   # 15 days
+    reset-expires-seconds: 900         # 15 minutes
+
+  # File Paths
+  server-log-dir: D:/StubServerPortal/stubServer/stubServerFiles/logs
+  reqresp-log-dir: D:/StubServerPortal/stubServer/stubServerFiles/logs/reqreslogs
+  dataset-paths: D:/StubServerPortal/stubServer/stubServerFiles/vsfiles/dataset
+  batch:
+    java-start: D:/StubServerPortal/stubServer/start.bat
+    java-stop: D:/StubServerPortal/stubServer/stop.bat
+
+  # Health Check
+  health-api: https://your-prod-domain.com/sbackend/healthCheck
+
+  # Mail
+  mail:
+    from: no-reply@domain.com

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOG_DIR" value="./logs/PortalBackend"/>
+
+    <!-- General Logs -->
+    <appender name="GENERAL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/stubserver.log</file>
+
+        <rollingPolicy class="com.stubserver.backend.logging.SequentialArchiveRollingPolicy">
+            <fileNameBase>${LOG_DIR}/stubserver</fileNameBase>
+            <maxFiles>50</maxFiles>
+            <deleteOlderAtIndex>25</deleteOlderAtIndex>
+            <olderFolderName>older_logs</olderFolderName>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- Error Logs -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/stubserver-error.log</file>
+
+        <rollingPolicy class="com.stubserver.backend.logging.SequentialArchiveRollingPolicy">
+            <fileNameBase>${LOG_DIR}/stubserver-error</fileNameBase>
+            <maxFiles>20</maxFiles>
+            <deleteOlderAtIndex>10</deleteOlderAtIndex>
+            <olderFolderName>older_error_logs</olderFolderName>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- Console Logs -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="GENERAL_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Reduce noisy logs -->
+    <logger name="org.hibernate.SQL" level="WARN"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+
+</configuration>
